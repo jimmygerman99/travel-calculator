@@ -2,9 +2,16 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from cpp_calculator import calculate_cpp
-
+from api.cpp_calculator import calculate_cpp
+from api.creditCardList import get_credit_card_list
+from typing import List, Dict
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",  # Adjust based on your frontend port
+]
+# ------------------------------------------------------------------------------------------------------------------------------------
+# CALCULATES CPP
 
 # Pydantic model for input validation
 
@@ -24,16 +31,16 @@ async def calculate_redemption(request: RedemptionRequest):
 
 # A test route to ensure the server is running
 
-credit_cards= [
-    {"name": "Card 1", "partner_airlines": ["Airline A", "Airline B"]},
-    {"name": "Card 2", "partner_airlines": ["Airline C", "Airline D"]},
-    # Add more cards as needed
-]
-
-@app.get("/credit-cards")
-def get_credit_cards():
-    return credit_cards
 
 @app.get("/")
 async def read_root():
     return {"message": "CPP Calculator is running"}
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+# Grabs Credit Card List Dynamically
+
+
+@app.get("/api/credit-cards", response_model=List[Dict[str, List[str]]])
+async def get_credit_card_list():
+    return get_credit_card_list()

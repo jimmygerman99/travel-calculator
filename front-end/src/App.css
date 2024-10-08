@@ -1,20 +1,95 @@
-body {
-  font-family: Arial, sans-serif;
-}
 
-.app-container {
-  margin: 20px;
+
+
+/*WEBSITE-------------------------------------------------------------------*/
+.website {
+  background-color: #CBD9CB; /* Sets the entire container's background to light green */
+  min-height: 100vh; /* Ensures it covers the full height of the viewport */
+  width: auto;
+}
+.content {
+  width: 60%; /* Adjust width as per your design requirement */
+  background-color: white; /*This will need to be  fixed */
   padding: 20px;
-  background-color: #e97171;
-  border-radius: 15px;
-  width: 2000px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds shadow for better focus */
+  margin: auto;
+  min-height: 100vh; /* Ensures it covers the full height of the viewport */
+
+
+
+}
+/*NAVBAR-------------------------------------------------------------------*/
+.navbar {
+  display: flex;
+  
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f4f4f4; /* Light grey background to match your screenshot */
+  border-bottom: 1px solid #000; /* Black line under the navbar */
+  padding: 10px 20px;
 }
 
-form {
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.menu a {
+  margin-right: 20px;
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+}
+
+.menu span {
+  font-size: 10px;
+}
+/*-------------------------------------------------------------------------*/
+
+
+
+
+.info {
+  width: 100%; /* Full width relative to its parent container, .content */
+  padding: 20px 0; /* Top and bottom padding for spacing, adjust as needed */
+  border-bottom: 1px solid black; /* Bottom black line */
+  height: 300px;
+}
+
+
+
+
+
+/*SEARCH FLIGHTS -----------------------------------------------------------*/
+.searchFlights {
+  width: 50%; /* Half the width of the parent container, .content */
+  margin-left: 20px;
+  padding: 20px; /* Spacing inside the box */
+  border: 2px solid black; /* Border as seen in the screenshot */
+  background-color: #ffffff; /* White background for the box */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow for depth */
+  border-radius: 2%;
+}
+.searchFlights form {
   display: flex;
   flex-direction: column;
 }
+.destinationGroup {
+  display: flex;
+  justify-content: space-between; /* This spaces out the child elements */
+  align-items: center; /* This aligns the elements vertically */
+  width: 100%; /* Ensures the container takes the full width */
+  margin-bottom: 10px; /* Space below the group for separation */
+}
+.destinationGroup input {
+  width: 300px;
+ 
+}
 
+
+.searchFlights label {
+  margin-bottom: 5px; /* Space below each label */
+}
 input, select {
   margin: 10px 0;
   padding: 8px;
@@ -23,6 +98,7 @@ input, select {
 }
 
 button {
+
   background-color: #4CAF50;
   color: white;
   padding: 10px 15px;
@@ -33,4 +109,22 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+.card-suggestions {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.card-suggestions li {
+  padding: 10px;
+  cursor: pointer;
+  background-color: green;
+}
+
+.card-suggestions li:hover {
+  background-color: blue;
 }
