@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import DatePicker from "react-datepicker";
 import "./App.css";
 
 // Define the form data interface
@@ -8,7 +9,9 @@ interface FormData {
     points: number;
     destination: string;
     destinationType: string;
-    departure: string;
+    departureCity: string;
+    departureDate: string;
+    returnDate: string;
     flightType: string;
     classType: string;
 }
@@ -25,14 +28,15 @@ const App: React.FC = () => {
         points: 0,
         destination: "",
         destinationType: "city",
-        departure: "",
+        departureCity: "",
+        departureDate: "",
+        returnDate: "",
         flightType: "",
         classType: "",
     });
 
     // State to store all available credit card sections fetched from backend
     const [creditCardSections, setCreditCardSections] = useState<CreditCardSection[]>([]);
-    const [filteredCards, setFilteredCards] = useState<string[]>([]);
 
     // Fetch credit card options from backend on component mount
     useEffect(() => {
@@ -75,14 +79,6 @@ const App: React.FC = () => {
         // Additional processing or API calls can be handled here
     };
 
-    // Handle credit card selection from the dropdown
-    const handleCardSelect = (card: string) => {
-        setFormData({
-            ...formData,
-            creditCard: card,
-        });
-        setFilteredCards([]); // Clear suggestions after selection
-    };
     let navigate = useNavigate();
     return (
         <div className="website">
