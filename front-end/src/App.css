@@ -20,8 +20,9 @@
 }
 /*NAVBAR-------------------------------------------------------------------*/
 .navbar {
+  width: 60%;
+  margin: auto;
   display: flex;
-  
   justify-content: space-between;
   align-items: center;
   background-color: #f4f4f4; /* Light grey background to match your screenshot */
@@ -127,4 +128,9 @@ button:hover {
 
 .card-suggestions li:hover {
   background-color: blue;
+}
+.logo a {
+  color: inherit; /* Makes the color the same as the parent element */
+  text-decoration: none; /* Removes underline */
+  font-weight: bold; /* Example to make it bold if needed */
 }

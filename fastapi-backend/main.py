@@ -8,7 +8,7 @@ from typing import List, Dict
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",  # Adjust based on your frontend port
+    "http://localhost:5173",  # Adjust based on your frontend port
 ]
 # ------------------------------------------------------------------------------------------------------------------------------------
 # CALCULATES CPP
