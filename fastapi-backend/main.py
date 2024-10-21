@@ -4,7 +4,10 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from api.cpp_calculator import calculate_cpp
 from api.creditCardList import get_credit_card_list
+from api.destinationType import CONTINENTS
 from typing import List, Dict
+
+
 app = FastAPI()
 
 origins = [
@@ -44,3 +47,11 @@ async def read_root():
 @app.get("/api/credit-cards", response_model=List[Dict[str, List[str]]])
 async def get_credit_card_list():
     return get_credit_card_list()
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+# Grabs continents
+
+
+@app.get("/api/continents")
+def get_continents():
+    return CONTINENTS

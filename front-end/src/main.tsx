@@ -7,6 +7,7 @@ import FAQ from "./pages/FAQ";
 import FlightSearch from "./pages/FlightSearch";
 import ErrorPage from "./pages/ErrorPage";
 import "bootstrap/dist/css/bootstrap.css";
+import Layout from "./components/Layout"; // Import the layout component
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 createRoot(document.getElementById("root")!).render(
@@ -26,11 +27,15 @@ createRoot(document.getElementById("root")!).render(
 
             <Routes>
                 <Route path="/" element={<App />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/FlightSearch" element={<FlightSearch />} />
-                <Route path="*" element={<ErrorPage />} />
+                <Route element={<Layout />}>
+                    {" "}
+                    {/* Wrap all routes within Layout */}
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/FlightSearch" element={<FlightSearch />} />
+                    <Route path="*" element={<ErrorPage />} />
+                </Route>
             </Routes>
 
             <div>This is a footer</div>

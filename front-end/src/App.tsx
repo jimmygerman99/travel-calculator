@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import DatePicker from "react-datepicker";
 import "./App.css";
 
 // Define the form data interface
@@ -35,48 +34,40 @@ const App: React.FC = () => {
         classType: "",
     });
 
-    // State to store all available credit card sections fetched from backend
     const [creditCardSections, setCreditCardSections] = useState<CreditCardSection[]>([]);
+    const [filteredCards, setFilteredCards] = useState<string[]>([]);
 
-    // Fetch credit card options from backend on component mount
     useEffect(() => {
-        const fetchCreditCards = async () => {
-            try {
-                const response = await fetch("http://localhost:8000/api/credit-cards");
-                const sections = await response.json();
-                setCreditCardSections(sections);
-            } catch (error) {
-                console.error("Error fetching credit cards:", error);
-            }
-        };
-
         fetchCreditCards();
     }, []);
 
-    // Handle changes in input fields
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-
-        if (name === "creditCard") {
-            // Filter credit cards based on input
-            let filtered: string[] = [];
-            creditCardSections.forEach((section) => {
-                const matchingCards = section.cards.filter((card) => card.toLowerCase().includes(value.toLowerCase()));
-                filtered = [...filtered, ...matchingCards];
-            });
-            setFilteredCards(filtered);
+    const fetchCreditCards = async () => {
+        try {
+            const response = await fetch("http://localhost:5173/api/credit-cards");
+            const sections: CreditCardSection[] = await response.json();
+            setCreditCardSections(sections);
+        } catch (error) {
+            console.error("Error fetching credit cards:", error);
         }
     };
 
-    // Handle form submission
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+
+        if (name === "creditCard") {
+            const lowerCaseValue = value.toLowerCase();
+            const matchedCards = creditCardSections.flatMap((section) =>
+                section.cards.filter((card) => card.toLowerCase().includes(lowerCaseValue))
+            );
+            setFilteredCards(matchedCards);
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(formData);
-        // Additional processing or API calls can be handled here
+        console.log("Form data submitted:", formData);
+        // navigate("/FlightSearch"); // Uncomment this line to navigate on form submit
     };
 
     let navigate = useNavigate();
@@ -86,6 +77,7 @@ const App: React.FC = () => {
                 <div className="info">Content Sesh</div>
                 <div className="BottomHalf">
                     <div className="searchFlights">
+                        {/*This is the form */}
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="creditCard">Enter the credit card to use</label>
                             <input
@@ -94,10 +86,21 @@ const App: React.FC = () => {
                                 name="creditCard"
                                 value={formData.creditCard}
                                 onChange={handleChange}
+                                autoComplete="off"
                             />
+                            {filteredCards.length > 0 && (
+                                <ul className="autocomplete-dropdown">
+                                    {filteredCards.map((card, index) => (
+                                        <li key={index} onClick={() => setFormData((prev) => ({ ...prev, creditCard: card }))}>
+                                            {card}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
 
                             <label htmlFor="points">Enter the maximum number of points</label>
                             <input type="number" id="points" name="points" value={formData.points} onChange={handleChange} />
+
                             <button type="submit" onClick={() => navigate("/FlightSearch")}>
                                 Search
                             </button>

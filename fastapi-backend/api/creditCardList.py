@@ -1,7 +1,7 @@
 # creditCardList.py
 
 from typing import List, Dict
-
+from destinationType import CONTINENTS
 # Function to fetch all available credit cards grouped by sections
 
 
@@ -23,8 +23,6 @@ def get_credit_card_list() -> List[Dict[str, List[str]]]:
             "cards": [
                 "Chase Sapphire Preferred",
                 "Chase Sapphire Reserve",
-                "Chase Freedom Unlimited",
-                "Chase Freedom Flex",
                 "United Explorer Card",
                 "IHG Rewards Club Premier",
             ],
@@ -32,9 +30,8 @@ def get_credit_card_list() -> List[Dict[str, List[str]]]:
         {
             "section": "Citi",
             "cards": [
-                "Citi Premier",
+                "Citi Strata Premier",
                 "Citi Prestige",
-                "Citi Double Cash",
                 "Citi AAdvantage Platinum Select",
             ],
         },
@@ -43,9 +40,14 @@ def get_credit_card_list() -> List[Dict[str, List[str]]]:
             "cards": [
                 "Capital One Venture",
                 "Capital One VentureOne",
-                "Capital One Savor",
+                "Capital One Venture X",
             ],
         },
         # Add more sections for other hotel and travel cards
     ]
     return credit_cards
+
+
+def get_continents_list() -> List[str]:
+    # Return the list of continents
+    return CONTINENTS

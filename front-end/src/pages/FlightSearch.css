@@ -1,0 +1,66 @@
+
+.searchFlightsPage2 {
+    width: 100%; /* Half the width of the parent container, .content */
+    padding: 20px; /* Spacing inside the box */
+    border: 2px solid black; /* Border as seen in the screenshot */
+    background-color: #ffffff; /* White background for the box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow for depth */
+    border-radius: 2%;
+  }
+  .searchFlightsPage2 form {
+    display: flex;
+    flex-direction: column;
+  }
+
+/* Container for Date Pickers */
+.datePickerGroup {
+    display: flex;
+    flex-direction: row;
+    width: 50%; /* Make the entire date picker group take only half the form width */
+    margin-bottom: 250px; /* Space below the group for separation */
+    align-items: center;
+  }
+  
+  /* Wrapper for each Date Picker to control width */
+  .datePickerWrapper {
+    flex: 1;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+  .datePickerWrapper .react-datepicker-wrapper {
+    width: 100%;
+  }
+
+
+  /* Adjust Date Picker Input */
+.react-datepicker__input-container input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+
+.destinationGroup {
+  width: 50%;
+  margin-bottom: 20px;
+}
+
+/* Adjust button appearance */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #45a049;
+}

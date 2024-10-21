@@ -4,7 +4,6 @@
 /*WEBSITE-------------------------------------------------------------------*/
 .website {
   background-color: #CBD9CB; /* Sets the entire container's background to light green */
-  min-height: 100vh; /* Ensures it covers the full height of the viewport */
   width: auto;
 }
 .content {
@@ -14,9 +13,6 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds shadow for better focus */
   margin: auto;
   min-height: 100vh; /* Ensures it covers the full height of the viewport */
-
-
-
 }
 /*NAVBAR-------------------------------------------------------------------*/
 .navbar {
@@ -75,6 +71,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .destinationGroup {
   display: flex;
   justify-content: space-between; /* This spaces out the child elements */
@@ -86,7 +83,6 @@
   width: 300px;
  
 }
-
 
 .searchFlights label {
   margin-bottom: 5px; /* Space below each label */
@@ -133,4 +129,22 @@ button:hover {
   color: inherit; /* Makes the color the same as the parent element */
   text-decoration: none; /* Removes underline */
   font-weight: bold; /* Example to make it bold if needed */
+}
+.autocomplete-dropdown {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  width: calc(100% - 20px); /* Adjust based on your specific input styling */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.autocomplete-dropdown li {
+  padding: 8px 10px;
+  list-style-type: none;
+}
+
+.autocomplete-dropdown li:hover {
+  background-color: #f0f0f0;
 }
