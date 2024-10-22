@@ -33,24 +33,35 @@ const App: React.FC = () => {
         flightType: "",
         classType: "",
     });
-
+    type CreditCardSection = {
+        section: string;
+        cards: string[];
+    };
     const [creditCardSections, setCreditCardSections] = useState<CreditCardSection[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
     const [filteredCards, setFilteredCards] = useState<string[]>([]);
 
     useEffect(() => {
-        fetchCreditCards();
+        const fetchCards = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/credit-cards");
+                if (response.ok) {
+                    const data = await response.json();
+                    setCreditCardSections(data);
+                    console.log("Fetched credit cards:", data);
+                } else {
+                    setError("Failed to fetch cards");
+                }
+            } catch (error) {
+                setError("Error fetching cards: " + (error as Error).message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchCards();
     }, []);
-
-    const fetchCreditCards = async () => {
-        try {
-            const response = await fetch("http://localhost:5173/api/credit-cards");
-            const sections: CreditCardSection[] = await response.json();
-            setCreditCardSections(sections);
-        } catch (error) {
-            console.error("Error fetching credit cards:", error);
-        }
-    };
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -80,22 +91,23 @@ const App: React.FC = () => {
                         {/*This is the form */}
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="creditCard">Enter the credit card to use</label>
-                            <input
-                                type="text"
-                                id="creditCard"
-                                name="creditCard"
-                                value={formData.creditCard}
-                                onChange={handleChange}
-                                autoComplete="off"
-                            />
-                            {filteredCards.length > 0 && (
-                                <ul className="autocomplete-dropdown">
-                                    {filteredCards.map((card, index) => (
-                                        <li key={index} onClick={() => setFormData((prev) => ({ ...prev, creditCard: card }))}>
-                                            {card}
-                                        </li>
+                            {isLoading ? (
+                                <p>Loading credit cards...</p>
+                            ) : error ? (
+                                <p>{error}</p>
+                            ) : (
+                                <select id="creditCard" name="creditCard" value={formData.creditCard} onChange={handleChange}>
+                                    <option value="">Select a Credit Card</option>
+                                    {creditCardSections.map((section, sectionIndex) => (
+                                        <optgroup key={sectionIndex} label={section.section}>
+                                            {section.cards.map((card, cardIndex) => (
+                                                <option key={cardIndex} value={card}>
+                                                    {card}
+                                                </option>
+                                            ))}
+                                        </optgroup>
                                     ))}
-                                </ul>
+                                </select>
                             )}
 
                             <label htmlFor="points">Enter the maximum number of points</label>

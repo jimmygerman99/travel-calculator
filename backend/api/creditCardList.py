@@ -46,8 +46,3 @@ def get_credit_card_list() -> List[Dict[str, List[str]]]:
         # Add more sections for other hotel and travel cards
     ]
     return credit_cards
-
-
-def get_continents_list() -> List[str]:
-    # Return the list of continents
-    return CONTINENTS

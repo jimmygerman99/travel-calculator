@@ -28,7 +28,8 @@ const FlightSearch = () => {
         departureDate: new Date(),
         returnDate: null,
     });
-
+    // ----------------------------------------------------------------------------------------------------------------------------
+    // Fetching all countries
     // State for countries list
     const [countries, setCountries] = useState<string[]>([]);
 
@@ -40,6 +41,7 @@ const FlightSearch = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setCountries(data);
+                    console.log("Fetched countries:", data);
                 } else {
                     console.error("Failed to fetch countries");
                 }
@@ -51,6 +53,12 @@ const FlightSearch = () => {
         fetchCountries();
     }, []);
 
+    // Another useEffect to log countries whenever they change
+    useEffect(() => {
+        console.log("Countries state updated:", countries);
+    }, [countries]);
+
+    // ----------------------------------------------------------------------------------------------------------------------------
     // Handler for input change
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -82,7 +90,9 @@ const FlightSearch = () => {
         <div className="searchFlightsPage2">
             <form onSubmit={handleSubmit}>
                 <div className="destinationGroup">
-                    <label htmlFor="destination">Enter Destination</label>
+                    <label htmlFor="destination" className="bold">
+                        Enter Destination
+                    </label>
                     {formData.destinationType === "continent" ? (
                         <select id="destination" name="destination" value={formData.destination} onChange={handleChange}>
                             <option value="">Select Continent</option>

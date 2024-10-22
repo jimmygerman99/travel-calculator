@@ -148,3 +148,10 @@ button:hover {
 .autocomplete-dropdown li:hover {
   background-color: #f0f0f0;
 }
+
+label {
+  font-weight: bold;
+}
+.unBold {
+  font-weight: lighter;
+}
