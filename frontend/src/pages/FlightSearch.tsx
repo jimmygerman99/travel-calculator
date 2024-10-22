@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { createRoot } from "react-dom/client";
 import "react-datepicker/dist/react-datepicker.css";
@@ -18,10 +18,6 @@ interface FormData {
 }
 
 const FlightSearch = () => {
-    // This is for the calendar
-    const [departureDate, setDepartureDate] = useState<Date | null>(new Date());
-    const [returnDate, setReturnDate] = useState<Date | null>(null);
-
     // State to manage form data
     const [formData, setFormData] = useState<FormData>({
         destination: "",
@@ -29,9 +25,31 @@ const FlightSearch = () => {
         departureCity: "",
         flightType: "economy",
         classType: "oneWay",
-        departureDate: departureDate,
-        returnDate: returnDate,
+        departureDate: new Date(),
+        returnDate: null,
     });
+
+    // State for countries list
+    const [countries, setCountries] = useState<string[]>([]);
+
+    // Fetch countries from the backend when component mounts
+    useEffect(() => {
+        const fetchCountries = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/common-countries");
+                if (response.ok) {
+                    const data = await response.json();
+                    setCountries(data);
+                } else {
+                    console.error("Failed to fetch countries");
+                }
+            } catch (error) {
+                console.error("Error fetching countries:", error);
+            }
+        };
+
+        fetchCountries();
+    }, []);
 
     // Handler for input change
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -41,14 +59,6 @@ const FlightSearch = () => {
 
     // Handler for date change
     const handleDateChange = (name: keyof FormData, value: Date | null) => {
-        // Directly using the setDepartureDate and setReturnDate inside the function
-        if (name === "departureDate") {
-            setDepartureDate(value);
-        } else if (name === "returnDate") {
-            setReturnDate(value);
-        }
-
-        // Updating form data state for any changes in the form
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -75,9 +85,19 @@ const FlightSearch = () => {
                     <label htmlFor="destination">Enter Destination</label>
                     {formData.destinationType === "continent" ? (
                         <select id="destination" name="destination" value={formData.destination} onChange={handleChange}>
+                            <option value="">Select Continent</option>
                             {continents.map((continent, index) => (
                                 <option key={index} value={continent}>
                                     {continent}
+                                </option>
+                            ))}
+                        </select>
+                    ) : formData.destinationType === "country" ? (
+                        <select id="destination" name="destination" value={formData.destination} onChange={handleChange}>
+                            <option value="">Select Country</option>
+                            {countries.map((country, index) => (
+                                <option key={index} value={country}>
+                                    {country}
                                 </option>
                             ))}
                         </select>
@@ -86,6 +106,7 @@ const FlightSearch = () => {
                             type="text"
                             id="destination"
                             name="destination"
+                            placeholder="Enter City"
                             value={formData.destination}
                             onChange={handleChange}
                         />
@@ -104,6 +125,7 @@ const FlightSearch = () => {
                     type="text"
                     id="departureCity"
                     name="departureCity"
+                    placeholder="Enter Departure City"
                     value={formData.departureCity}
                     onChange={handleChange}
                 />
@@ -140,7 +162,7 @@ const FlightSearch = () => {
                                 selected={formData.returnDate}
                                 onChange={(date) => handleDateChange("returnDate", date)}
                                 dateFormat="MMMM d, yyyy"
-                                minDate={formData.departureDate ? addDays(formData.departureDate, 0) : new Date()}
+                                minDate={formData.departureDate ? addDays(formData.departureDate, 1) : new Date()}
                                 showDisabledMonthNavigation
                                 customInput={<CustomDateInput label="Return Date" date={formData.returnDate} />}
                             />
@@ -167,6 +189,7 @@ const CustomDateInput: React.FC<{ value?: string; onClick?: () => void; label: s
         </div>
     );
 };
+
 export default FlightSearch;
 
 // Render the component

@@ -6,7 +6,7 @@ from api.cpp_calculator import calculate_cpp
 from api.creditCardList import get_credit_card_list
 from api.destinationType import CONTINENTS
 from typing import List, Dict
-
+import requests
 
 app = FastAPI()
 
@@ -49,7 +49,7 @@ async def get_credit_card_list():
     return get_credit_card_list()
 
 # ------------------------------------------------------------------------------------------------------------------------------------
-# Grabs continents
+# Grabs countries
 
 
 @app.get("/api/continents")
