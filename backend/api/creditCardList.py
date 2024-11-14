@@ -1,7 +1,6 @@
 # creditCardList.py
 
 from typing import List, Dict
-from destinationType import CONTINENTS
 # Function to fetch all available credit cards grouped by sections
 
 

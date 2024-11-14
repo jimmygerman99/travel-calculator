@@ -201,9 +201,3 @@ const CustomDateInput: React.FC<{ value?: string; onClick?: () => void; label: s
 };
 
 export default FlightSearch;
-
-// Render the component
-const rootElement = document.getElementById("root");
-if (rootElement) {
-    createRoot(rootElement).render(<FlightSearch />);
-}
