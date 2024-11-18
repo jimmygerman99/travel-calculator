@@ -7,10 +7,19 @@ import "../App.css";
 
 const continents = ["Africa", "Antarctica", "Asia", "Europe", "North America", "Oceania", "South America"];
 
+interface Airport {
+    airport_name: string;
+    iata: string | null;
+    city: string;
+    country: string;
+    continent: string;
+}
+
 interface FormData {
     destination: string;
     destinationType: string;
     departureCity: string;
+    departureAirport: string;
     flightType: string;
     classType: string;
     departureDate: Date | null;
@@ -19,18 +28,32 @@ interface FormData {
 
 const FlightSearch = () => {
     // State to manage form data
-    const [formData, setFormData] = useState<FormData>({
-        destination: "",
-        destinationType: "city",
-        departureCity: "",
-        flightType: "economy",
-        classType: "oneWay",
-        departureDate: new Date(),
-        returnDate: null,
+    const [formData, setFormData] = useState<FormData>(() => {
+        const savedData = localStorage.getItem("flightSearchFormData");
+        return savedData
+            ? JSON.parse(savedData)
+            : {
+                  destination: "",
+                  destinationType: "city",
+                  departureCity: "",
+                  departureAirport: "",
+                  flightType: "economy",
+                  classType: "oneWay",
+                  departureDate: new Date(),
+                  returnDate: null,
+              };
     });
-    // ----------------------------------------------------------------------------------------------------------------------------
+
+    // Save data to localStorage whenever formData changes
+    useEffect(() => {
+        localStorage.setItem("flightSearchFormData", JSON.stringify(formData));
+    }, [formData]);
+
+    // State for all airports and filtered airports
+    const [airports, setAirports] = useState<Airport[]>([]);
+    const [filteredAirports, setFilteredAirports] = useState<Airport[]>([]);
+
     // Fetching all countries
-    // State for countries list
     const [countries, setCountries] = useState<string[]>([]);
 
     // Fetch countries from the backend when component mounts
@@ -41,7 +64,6 @@ const FlightSearch = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setCountries(data);
-                    console.log("Fetched countries:", data);
                 } else {
                     console.error("Failed to fetch countries");
                 }
@@ -49,20 +71,61 @@ const FlightSearch = () => {
                 console.error("Error fetching countries:", error);
             }
         };
-
         fetchCountries();
     }, []);
 
-    // Another useEffect to log countries whenever they change
+    // Fetch airports from the backend when component mounts
     useEffect(() => {
-        console.log("Countries state updated:", countries);
-    }, [countries]);
+        const fetchAirports = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/airports");
+                if (response.ok) {
+                    const data = await response.json();
+                    setAirports(data);
+                } else {
+                    console.error("Failed to fetch airports");
+                }
+            } catch (error) {
+                console.error("Error fetching airports:", error);
+            }
+        };
+        fetchAirports();
+    }, []);
 
-    // ----------------------------------------------------------------------------------------------------------------------------
     // Handler for input change
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    // Handler for filtering airports dynamically
+    const handleAirportInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setFormData((prev) => ({ ...prev, departureCity: value }));
+
+        if (value.length === 0) {
+            setFilteredAirports([]);
+            return;
+        }
+
+        let exactMatches: Airport[] = [];
+        let partialMatches: Airport[] = [];
+
+        // If input is exactly 3 characters, try to match with IATA code first
+        if (value.length === 3) {
+            exactMatches = airports.filter((airport) => airport.iata?.toUpperCase() === value.toUpperCase());
+        }
+
+        // Find partial matches by city name or airport name
+        partialMatches = airports.filter(
+            (airport) =>
+                airport.city.toLowerCase().includes(value.toLowerCase()) ||
+                airport.airport_name.toLowerCase().includes(value.toLowerCase())
+        );
+
+        // Merge exact and partial matches (show exact match first)
+        const combinedResults = [...exactMatches, ...partialMatches.slice(0, 4)];
+        setFilteredAirports(combinedResults);
     };
 
     // Handler for date change
@@ -90,6 +153,12 @@ const FlightSearch = () => {
         <div className="searchFlightsPage2">
             <form onSubmit={handleSubmit}>
                 <div className="destinationGroup">
+                    <label htmlFor="destinationType">Destination Type</label>
+                    <select id="destinationType" name="destinationType" value={formData.destinationType} onChange={handleChange}>
+                        <option value="city">City</option>
+                        <option value="country">Country</option>
+                        <option value="continent">Continent</option>
+                    </select>
                     <label htmlFor="destination" className="bold">
                         Enter Destination
                     </label>
@@ -121,24 +190,35 @@ const FlightSearch = () => {
                             onChange={handleChange}
                         />
                     )}
-
-                    <label htmlFor="destinationType">Destination Type</label>
-                    <select id="destinationType" name="destinationType" value={formData.destinationType} onChange={handleChange}>
-                        <option value="city">City</option>
-                        <option value="country">Country</option>
-                        <option value="continent">Continent</option>
-                    </select>
                 </div>
 
-                <label htmlFor="departureCity">Departure City</label>
+                <label htmlFor="departureCity">Departure City / Airport Code</label>
                 <input
                     type="text"
                     id="departureCity"
                     name="departureCity"
-                    placeholder="Enter Departure City"
+                    placeholder="Enter IATA code or city"
                     value={formData.departureCity}
-                    onChange={handleChange}
+                    onChange={handleAirportInputChange}
+                    autoComplete="off"
                 />
+
+                {filteredAirports.length > 0 && (
+                    <select
+                        id="filteredAirports"
+                        name="filteredAirports"
+                        onChange={(e) => setFormData({ ...formData, departureAirport: e.target.value })}
+                    >
+                        <option value="">Select an airport</option>
+                        {filteredAirports.map((airport, index) => (
+                            <option key={index} value={airport.iata || airport.city}>
+                                {airport.city
+                                    ? `${airport.city} (${airport.iata}) - ${airport.airport_name}`
+                                    : airport.airport_name}
+                            </option>
+                        ))}
+                    </select>
+                )}
 
                 <label htmlFor="flightType">Flight Type</label>
                 <select id="flightType" name="flightType" value={formData.flightType} onChange={handleChange}>

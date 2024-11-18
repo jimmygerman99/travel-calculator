@@ -28,11 +28,12 @@ app.add_middleware(
 CONTINENTS = ["Africa", "Antarctica", "Asia", "Europe",
               "North America", "Oceania", "South America"]
 
-
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # API TO GET ALL CREDITCARDS
 # Credit Card API Endpoint
+
+
 class CreditCard(BaseModel):
     section: str
     cards: List[str]
@@ -64,10 +65,43 @@ async def get_credit_card_list1() -> List[CreditCard]:
             detail=f"An unexpected error occurred: {str(e)}"
         )
 
-# Endpoint to get all airports
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Endpoint to get all airports with relevant details (continent, country, airport name, IATA code)
+
+
+# Endpoint to get all airports with relevant details (airport_name, iata_code, country, continent, city)
+@app.get("/airports-summary")
+def get_airports_summary():
+    if not os.path.exists(JSON_FILE_PATH_AIRPORTS):
+        raise HTTPException(
+            status_code=500, detail="The airports.json file does not exist."
+        )
+
+    # Load the JSON data
+    try:
+        with open(JSON_FILE_PATH_AIRPORTS, "r", encoding="utf-8") as file:
+            data = json.load(file)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"An error occurred while loading the file: {str(e)}"
+        )
+
+    # Extract and organize the relevant details: airport_name, iata_code, country, continent, city
+    summary_list = [
+        {
+            "airport_name": airport.get("airport_name"),
+            "iata_code": airport.get("iata"),
+            "country": airport.get("country"),
+            "continent": airport.get("continent"),
+            "city": airport.get("city")
+        }
+        for airport in data
+    ]
+
+    return summary_list
+
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 # Endpoint to get common countries from the JSON. ALWAYS USE THIS
 
 
@@ -84,7 +118,8 @@ def get_common_country_names():
 
     # Sort the countries by the "common" name
     sorted_countries = sorted(
-        data, key=lambda country: country["name"]["common"])
+        data, key=lambda country: country["name"]["common"]
+    )
 
     # Extract only the common names of the countries
     country_names = [country["name"]["common"] for country in sorted_countries]
@@ -92,7 +127,6 @@ def get_common_country_names():
     return country_names
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 # Endpoint to get countries using the REST API. THIS IS CALLING IT from the api
 
 
@@ -103,4 +137,5 @@ def get_countries():
         return response.json()
     else:
         return {"error": "Failed to fetch data"}
+
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------

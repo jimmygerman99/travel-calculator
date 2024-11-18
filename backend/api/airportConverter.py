@@ -1,39 +1,28 @@
 import pandas as pd
 
-# Path to the CSV and JSON files
-CSV_FILE_PATH = "airports.csv"  # Update this path if needed
-# The existing JSON file in your project folder
-JSON_FILE_PATH = "airports.json"
+# Load the CSV file
+csv_file_path = 'airports.csv'
+json_file_path = 'airports.json'
 
-# Load the CSV file into a DataFrame
-df = pd.read_csv(CSV_FILE_PATH)
+# Read the CSV
+df = pd.read_csv(csv_file_path)
 
-# List of columns of interest
-columns_of_interest = [
-    'name',           # Airport name
-    'iso_country',    # Country
-    'continent',      # Continent
-    'iata_code',      # IATA code
-    'ident',          # Airport identifier (use as ICAO alternative)
-    'latitude_deg',   # Latitude
-    'longitude_deg'   # Longitude
-]
+# Filter out airports that don't have an IATA code
+df_filtered = df[df['iata_code'].notna()]
 
-# Only keep the relevant columns
-df_filtered = df[columns_of_interest]
+# Select columns of interest (e.g., airport name, country, continent, IATA code, and city)
+df_filtered = df_filtered[['name', 'iata_code',
+                           'iso_country', 'continent', 'municipality']]
 
-# Rename columns to have a consistent, readable JSON structure
-df_filtered = df_filtered.rename(columns={
+# Rename columns for easier reference in the JSON
+df_filtered.rename(columns={
     'name': 'airport_name',
-    'iso_country': 'country',
-    'continent': 'continent',
     'iata_code': 'iata',
-    'ident': 'icao',  # Use 'ident' as the ICAO identifier in the JSON
-    'latitude_deg': 'latitude',
-    'longitude_deg': 'longitude'
-})
+    'iso_country': 'country',
+    'municipality': 'city'
+}, inplace=True)
 
-# Convert the DataFrame to JSON format and save it to the JSON file
-df_filtered.to_json(JSON_FILE_PATH, orient='records', indent=4)
+# Convert to JSON and save to file
+df_filtered.to_json(json_file_path, orient='records', indent=4)
 
-print(f"JSON file '{JSON_FILE_PATH}' has been created successfully!")
+print("Filtered JSON file has been created.")

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
 
-// Define the form data interface
 interface FormData {
     creditCard: string;
     points: number;
@@ -15,28 +14,33 @@ interface FormData {
     classType: string;
 }
 
-// Define the structure of a credit card section
 interface CreditCardSection {
     section: string;
     cards: string[];
 }
 
 const App: React.FC = () => {
-    const [formData, setFormData] = useState<FormData>({
-        creditCard: "",
-        points: 0,
-        destination: "",
-        destinationType: "city",
-        departureCity: "",
-        departureDate: "",
-        returnDate: "",
-        flightType: "",
-        classType: "",
-    });
-    type CreditCardSection = {
-        section: string;
-        cards: string[];
+    const navigate = useNavigate();
+
+    // Initialize form data from localStorage if available
+    const getInitialFormData = (): FormData => {
+        const savedFormData = localStorage.getItem("formData");
+        return savedFormData
+            ? JSON.parse(savedFormData)
+            : {
+                  creditCard: "",
+                  points: 0,
+                  destination: "",
+                  destinationType: "city",
+                  departureCity: "",
+                  departureDate: "",
+                  returnDate: "",
+                  flightType: "",
+                  classType: "",
+              };
     };
+
+    const [formData, setFormData] = useState<FormData>(getInitialFormData);
     const [creditCardSections, setCreditCardSections] = useState<CreditCardSection[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -49,7 +53,6 @@ const App: React.FC = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setCreditCardSections(data);
-                    console.log("Fetched credit cards:", data);
                 } else {
                     setError("Failed to fetch cards");
                 }
@@ -59,9 +62,14 @@ const App: React.FC = () => {
                 setIsLoading(false);
             }
         };
-
         fetchCards();
     }, []);
+
+    // Effect to save form data to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem("formData", JSON.stringify(formData));
+    }, [formData]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -78,17 +86,15 @@ const App: React.FC = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Form data submitted:", formData);
-        // navigate("/FlightSearch"); // Uncomment this line to navigate on form submit
+        navigate("/FlightSearch");
     };
 
-    let navigate = useNavigate();
     return (
         <div className="website">
             <div className="content">
                 <div className="info">Content Sesh</div>
                 <div className="BottomHalf">
                     <div className="searchFlights">
-                        {/*This is the form */}
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="creditCard">Enter the credit card to use</label>
                             {isLoading ? (
@@ -113,9 +119,7 @@ const App: React.FC = () => {
                             <label htmlFor="points">Enter the maximum number of points</label>
                             <input type="number" id="points" name="points" value={formData.points} onChange={handleChange} />
 
-                            <button type="submit" onClick={() => navigate("/FlightSearch")}>
-                                Search
-                            </button>
+                            <button type="submit">Search</button>
                         </form>
                     </div>
                 </div>

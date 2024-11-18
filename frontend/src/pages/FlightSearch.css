@@ -41,12 +41,36 @@
     font-size: 16px;
     border-radius: 4px;
     border: 1px solid #ccc;
+
 }
 
 
+/* Destination group styling */
 .destinationGroup {
-  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align all children to the left */
+  width: 100%;
+  max-width: 400px; /* Consistent max width for the container */
+}
+
+/* Styling for inputs and dropdowns within destination group */
+.destinationGroup input,
+.destinationGroup select {
+  width: 100%; /* Ensure both input and select dropdowns take full width of the container */
+  padding: 10px;
+  font-size: 16px;
+  box-sizing: border-box; /* Include padding and borders in width calculation */
+  border: 2px solid #ccc; /* Adding a border around the input and select elements */
+  border-radius: 4px; /* Optional: rounded corners */
   margin-bottom: 20px;
+}
+
+/* Optional: Add a hover and focus effect for better user experience */
+.destinationGroup select:hover,
+.destinationGroup select:focus {
+  border-color: #4CAF50; /* Change the border color on hover or focus */
+  outline: none; /* Remove default outline to keep the border focus more visible */
 }
 
 /* Adjust button appearance */
