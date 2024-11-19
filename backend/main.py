@@ -9,8 +9,8 @@ import os
 import pandas as pd
 
 # JSON File Paths
-JSON_FILE_PATH = "api/countries.json"
-JSON_FILE_PATH_AIRPORTS = "api/airports.json"
+JSON_FILE_PATH = "data/countries.json"
+JSON_FILE_PATH_AIRPORTS = "data/airports.json"
 
 app = FastAPI()
 

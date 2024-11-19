@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
-import { createRoot } from "react-dom/client";
 import "react-datepicker/dist/react-datepicker.css";
 import "./FlightSearch.css";
 import "../App.css";
@@ -98,36 +97,6 @@ const FlightSearch = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Handler for filtering airports dynamically
-    const handleAirportInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setFormData((prev) => ({ ...prev, departureCity: value }));
-
-        if (value.length === 0) {
-            setFilteredAirports([]);
-            return;
-        }
-
-        let exactMatches: Airport[] = [];
-        let partialMatches: Airport[] = [];
-
-        // If input is exactly 3 characters, try to match with IATA code first
-        if (value.length === 3) {
-            exactMatches = airports.filter((airport) => airport.iata?.toUpperCase() === value.toUpperCase());
-        }
-
-        // Find partial matches by city name or airport name
-        partialMatches = airports.filter(
-            (airport) =>
-                airport.city.toLowerCase().includes(value.toLowerCase()) ||
-                airport.airport_name.toLowerCase().includes(value.toLowerCase())
-        );
-
-        // Merge exact and partial matches (show exact match first)
-        const combinedResults = [...exactMatches, ...partialMatches.slice(0, 4)];
-        setFilteredAirports(combinedResults);
-    };
-
     // Handler for date change
     const handleDateChange = (name: keyof FormData, value: Date | null) => {
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -199,7 +168,6 @@ const FlightSearch = () => {
                     name="departureCity"
                     placeholder="Enter IATA code or city"
                     value={formData.departureCity}
-                    onChange={handleAirportInputChange}
                     autoComplete="off"
                 />
 

@@ -1,0 +1,80 @@
+{
+    "American Express": [
+        {
+            "name": "American Express Membership Rewards",
+            "transfers": [
+                { "airline": "Delta Air Lines", "iata": "DL" },
+                { "airline": "Air Canada", "iata": "AC" },
+                { "airline": "British Airways", "iata": "BA" },
+                { "airline": "Emirates", "iata": "EK" },
+                { "airline": "Singapore Airlines", "iata": "SQ" },
+                { "airline": "Aeromexico", "iata": "AM" },
+                { "airline": "Cathay Pacific", "iata": "CX" }
+            ]
+        },
+        {
+            "name": "Delta SkyMiles American Express",
+            "transfers": [{ "airline": "Delta Air Lines", "iata": "DL" }]
+        }
+    ],
+    "Chase": [
+        {
+            "name": ["Chase Sapphire Preferred", "Chase Sapphire Reserve", "Chase Ink Business Preferred"],
+            "transfers": [
+                { "airline": "Aer Lingus AerClub", "iata": "EI" },
+                { "airline": "British Airways Executive Club", "iata": "BA" },
+                { "airline": "Emirates Skywards", "iata": "EK" },
+                { "airline": "Air France KLM Flying Blue", "iata": "AF" },
+                { "airline": "Iberia Plus", "iata": "IB" },
+                { "airline": "JetBlue TrueBlue", "iata": "B6" },
+                { "airline": "Singapore Airlines KrisFlyer", "iata": "SQ" },
+                { "airline": "Southwest Airlines Rapid Rewards", "iata": "WN" },
+                { "airline": "United MileagePlus", "iata": "UA" },
+                { "airline": "Virgin Atlantic Flying Club", "iata": "VS" },
+                { "airline": "Air Canada Aeroplan", "iata": "AC" }
+            ]
+        }
+    ],
+    "Citi": [
+        {
+            "name": ["Citi Strata Premier", "Citi Prestige"],
+            "transfers": [
+                { "airline": "Aeromexico", "iata": "AM" },
+                { "airline": "Avianca LifeMiles", "iata": "AV" },
+                { "airline": "Cathay Pacific ‒ Asia Miles", "iata": "CX" },
+                { "airline": "Emirates Skywards", "iata": "EK" },
+                { "airline": "Etihad Guest", "iata": "EY" },
+                { "airline": "EVA Air ‒ Infinity MileageLands", "iata": "BR" },
+                { "airline": "Flying Blue (Air France/KLM)", "iata": "AF" },
+                { "airline": "JetBlue TrueBlue", "iata": "B6" },
+                { "airline": "Qantas Frequent Flyer", "iata": "QF" },
+                { "airline": "Qatar Airways Privilege Club", "iata": "QR" },
+                { "airline": "Singapore Airlines KrisFlyer", "iata": "SQ" },
+                { "airline": "Thai Royal Orchid Plus", "iata": "TG" },
+                { "airline": "Turkish Airlines Miles&Smiles", "iata": "TK" },
+                { "airline": "Virgin Atlantic Flying Club", "iata": "VS" }
+            ]
+        }
+    ],
+    "Capital One": [
+        {
+            "name": ["Capital One Venture", "Capital One Venture One", "Capital One Venture X"],
+            "transfers": [
+                { "airline": "Aeromexico", "iata": "AM" },
+                { "airline": "Air Canada ‒ Aeroplan", "iata": "AC" },
+                { "airline": "Cathay Pacific ‒ Asia Miles", "iata": "CX" },
+                { "airline": "Avianca LifeMiles", "iata": "AV" },
+                { "airline": "British Airways Executive Club", "iata": "BA" },
+                { "airline": "Emirates", "iata": "EK" },
+                { "airline": "Etihad Airways", "iata": "EY" },
+                { "airline": "Finnair", "iata": "AY" },
+                { "airline": "Flying Blue (Air France/KLM)", "iata": "AF" },
+                { "airline": "Qantas", "iata": "QF" },
+                { "airline": "Singapore Airlines", "iata": "SQ" },
+                { "airline": "TAP Air Portugal", "iata": "TP" },
+                { "airline": "Turkish Airlines", "iata": "TK" },
+                { "airline": "Virgin Atlantic (Virgin Red)", "iata": "VS" }
+            ]
+        }
+    ]
+}

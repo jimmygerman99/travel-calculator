@@ -119,7 +119,7 @@ const App: React.FC = () => {
                             <label htmlFor="points">Enter the maximum number of points</label>
                             <input type="number" id="points" name="points" value={formData.points} onChange={handleChange} />
 
-                            <button type="submit">Search</button>
+                            <button type="submit">Continue</button>
                         </form>
                     </div>
                 </div>
