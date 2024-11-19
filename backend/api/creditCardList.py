@@ -22,6 +22,7 @@ def get_credit_card_list() -> List[Dict[str, List[str]]]:
             "cards": [
                 "Chase Sapphire Preferred",
                 "Chase Sapphire Reserve",
+                "Chase Ink Business Preferred"
                 "United Explorer Card",
                 "IHG Rewards Club Premier",
             ],
