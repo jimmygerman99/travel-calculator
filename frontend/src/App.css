@@ -77,15 +77,15 @@
   justify-content: space-between; /* This spaces out the child elements */
   align-items: center; /* This aligns the elements vertically */
   width: 100%; /* Ensures the container takes the full width */
-  margin-bottom: 10px; /* Space below the group for separation */
+  margin-bottom: 50px; /* Space below the group for separation */
 }
 .destinationGroup input {
-  width: 300px;
+  width: 500px;
  
 }
 
 .searchFlights label {
-  margin-bottom: 5px; /* Space below each label */
+  margin-bottom: 10px; /* Space below each label */
 }
 input, select {
   margin: 10px 0;
@@ -94,8 +94,15 @@ input, select {
   border-radius: 4px;
 }
 
-button {
 
+.firstHalf, .secondHalf {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+/* For the submit button */
+button {
   background-color: #4CAF50;
   color: white;
   padding: 10px 15px;

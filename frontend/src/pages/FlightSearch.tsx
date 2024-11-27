@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./FlightSearch.css";
 import "../App.css";
+import { FormData } from "../interfaces/FormDataTypes";
 
 const continents = ["Africa", "Antarctica", "Asia", "Europe", "North America", "Oceania", "South America"];
 
@@ -12,17 +13,6 @@ interface Airport {
     city: string;
     country: string;
     continent: string;
-}
-
-interface FormData {
-    destination: string;
-    destinationType: string;
-    departureCity: string;
-    departureAirport: string;
-    flightType: string;
-    classType: string;
-    departureDate: Date | null;
-    returnDate: Date | null;
 }
 
 const FlightSearch = () => {
@@ -71,24 +61,6 @@ const FlightSearch = () => {
             }
         };
         fetchCountries();
-    }, []);
-
-    // Fetch airports from the backend when component mounts
-    useEffect(() => {
-        const fetchAirports = async () => {
-            try {
-                const response = await fetch("http://127.0.0.1:8000/airports");
-                if (response.ok) {
-                    const data = await response.json();
-                    setAirports(data);
-                } else {
-                    console.error("Failed to fetch airports");
-                }
-            } catch (error) {
-                console.error("Error fetching airports:", error);
-            }
-        };
-        fetchAirports();
     }, []);
 
     // Handler for input change
@@ -168,6 +140,7 @@ const FlightSearch = () => {
                     name="departureCity"
                     placeholder="Enter IATA code or city"
                     value={formData.departureCity}
+                    onChange={handleChange}
                     autoComplete="off"
                 />
 
@@ -175,6 +148,7 @@ const FlightSearch = () => {
                     <select
                         id="filteredAirports"
                         name="filteredAirports"
+                        value={formData.departureAirport}
                         onChange={(e) => setFormData({ ...formData, departureAirport: e.target.value })}
                     >
                         <option value="">Select an airport</option>
