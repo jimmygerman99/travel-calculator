@@ -44,14 +44,12 @@ export const Navbar: React.FC = () => {
                 <Link to="/about">About</Link>
                 <Link to="/contact">Contact</Link>
                 <Link to="/faq">FAQ</Link>
-                {/* Login Button for Dropdown */}
                 <button className="login-button" onClick={toggleLoginDropdown}>
                     Login
                 </button>
-                {/* Login Dropdown */}
                 {isLoginOpen && (
                     <div className="login-dropdown">
-                        <Login />
+                        <Login closeLoginDropdown={closeLoginDropdown} />
                     </div>
                 )}
             </div>

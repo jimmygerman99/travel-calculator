@@ -67,7 +67,6 @@ const App: React.FC = () => {
         }
     };
 
-    //This is how we are redirected to the next page
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (formData.creditCard === "") {
@@ -79,7 +78,6 @@ const App: React.FC = () => {
             alert("Please enter points greater than or equal to 1000.");
             return;
         }
-        setFormError(null);
         console.log("Form data submitted:", formData);
         navigate("/FlightSearch");
     };

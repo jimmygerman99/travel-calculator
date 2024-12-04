@@ -1,29 +1,41 @@
-// ParentComponent.tsx
-import React, { useState } from "react";
-import App from "../App";
-import FlightSearch from "../pages/FlightSearch";
+import React, { createContext, useContext, useState } from "react";
 import { FormData } from "../interfaces/FormDataTypes";
 
-const ParentComponent: React.FC = () => {
+export interface FormDataContextType {
+    formData: FormData;
+    updateFormData: (data: Partial<FormData>) => void; // Ensure this is part of the type
+}
+
+const FormDataContext = createContext<FormDataContextType | undefined>(undefined);
+
+export const FormDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [formData, setFormData] = useState<FormData>({
         creditCard: "",
         points: 0,
         destination: "",
-        destinationType: "city",
+        destinationType: "",
         departureCity: "",
         departureDate: new Date(),
         departureAirport: "",
         returnDate: null,
-        flightType: "economy",
-        classType: "oneWay",
+        flightType: "",
+        classType: "",
     });
 
-    return (
-        <>
-            <App formData={formData} setFormData={setFormData} />
-            <FlightSearch formData={formData} setFormData={setFormData} />
-        </>
-    );
+    const updateFormData = (data: Partial<FormData>) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            ...data, // Merge new data with existing form data
+        }));
+    };
+
+    return <FormDataContext.Provider value={{ formData, updateFormData }}>{children}</FormDataContext.Provider>;
 };
 
-export default ParentComponent;
+export const useFormData = () => {
+    const context = useContext(FormDataContext);
+    if (!context) {
+        throw new Error("useFormData must be used within a FormDataProvider");
+    }
+    return context;
+};

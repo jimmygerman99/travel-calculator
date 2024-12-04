@@ -4,12 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Navbar } from "../components/NavBar";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 export const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const signIn = useSignIn();
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
@@ -36,10 +37,25 @@ export const LoginPage = () => {
                 email: formData.email,
                 password: formData.password,
             });
-            console.log("Login successful:", response.data);
 
-            // Perform actions after successful login (e.g., save token, navigate)
-            alert("Login successful! ");
+            if (response.status === 200) {
+                // Use signIn from react-auth-kit
+                const success = signIn({
+                    auth: {
+                        token: response.data.access_token,
+                        type: "Bearer",
+                    },
+                    userState: { email: formData.email }, // Optional user state
+                    refresh: response.data.refresh_token || null, // Only if you are using refreshToken
+                });
+
+                if (success) {
+                    alert("Login successful!");
+                    // Redirect or perform actions after login
+                } else {
+                    setErrorMessage("Login failed. Please try again.");
+                }
+            }
         } catch (error: any) {
             console.error("Login error:", error);
 

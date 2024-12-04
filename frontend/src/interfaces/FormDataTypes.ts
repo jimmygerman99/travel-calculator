@@ -10,4 +10,4 @@ export interface FormData {
     flightType: string;
     classType: string;
   }
-  
+   

@@ -20,7 +20,7 @@ Base.metadata.create_all(bind=engine)
 
 # JSON File Paths
 JSON_FILE_PATH = "data/countries.json"
-JSON_FILE_PATH_AIRPORTS = "data/airports.json"
+JSON_FILE_PATH_AIRPORTS = "data/updated_airports.json"
 
 app = FastAPI()
 

@@ -196,7 +196,9 @@ const FlightSearch = () => {
                     )}
                 </div>
 
-                <button type="submit">Search</button>
+                <button type="submit" onClick={() => console.log("Current Form Data:", formData)}>
+                    Search
+                </button>
             </form>
         </div>
     );
