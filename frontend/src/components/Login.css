@@ -1,0 +1,57 @@
+.login-dropdown {
+    position: absolute;
+    top: 10px; 
+    background: #F2F0EF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000;
+    margin-top: 50px;
+  }
+  
+  .login-dropdown form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .login-dropdown label {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .login-dropdown input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .login-dropdown button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .login-dropdown button:hover {
+    background-color: #0056b3;
+  }
+
+  form .register-link {
+    display: block;
+    margin-top: 10px;
+    color: blue !important; /* Force color if overridden */
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    justify-content: center;
+}
+
+.register-link:hover {
+    color: darkblue;
+    text-decoration: none;
+}

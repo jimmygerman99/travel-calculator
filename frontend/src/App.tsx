@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
 import { FormData } from "./interfaces/FormDataTypes";
+import axios from "axios";
 import { validateCreditCardSelection } from "./utils/formErrorHandling";
 
 interface CreditCardSection {
@@ -72,7 +73,7 @@ const App: React.FC = () => {
         if (formData.creditCard === "") {
             alert("Please fill in all the data before pressing continue.");
             return;
-        } 
+        }
 
         if (!formData.points || formData.points < 1000) {
             alert("Please enter points greater than or equal to 1000.");

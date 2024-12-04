@@ -4,7 +4,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./FlightSearch.css";
 import "../App.css";
 import { FormData } from "../interfaces/FormDataTypes";
-
+import { TreeSelectComponent } from "../components/TreeSelectComponent";
+import type { TreeSelectProps } from "antd";
+import { TreeSelect } from "antd";
 const continents = ["Africa", "Antarctica", "Asia", "Europe", "North America", "Oceania", "South America"];
 
 interface Airport {
@@ -32,7 +34,15 @@ const FlightSearch = () => {
                   returnDate: null,
               };
     });
+    const [value, setValue] = useState<string>();
 
+    const onChange = (newValue: string) => {
+        setValue(newValue);
+    };
+
+    const onPopupScroll: TreeSelectProps["onPopupScroll"] = (e) => {
+        console.log("onPopupScroll", e);
+    };
     // Save data to localStorage whenever formData changes
     useEffect(() => {
         localStorage.setItem("flightSearchFormData", JSON.stringify(formData));
@@ -122,28 +132,12 @@ const FlightSearch = () => {
                             ))}
                         </select>
                     ) : (
-                        <input
-                            type="text"
-                            id="destination"
-                            name="destination"
-                            placeholder="Enter City"
-                            value={formData.destination}
-                            onChange={handleChange}
-                        />
+                        <TreeSelectComponent />
                     )}
                 </div>
 
                 <label htmlFor="departureCity">Departure City / Airport Code</label>
-                <input
-                    type="text"
-                    id="departureCity"
-                    name="departureCity"
-                    placeholder="Enter IATA code or city"
-                    value={formData.departureCity}
-                    onChange={handleChange}
-                    autoComplete="off"
-                />
-
+                <TreeSelectComponent />
                 {filteredAirports.length > 0 && (
                     <select
                         id="filteredAirports"

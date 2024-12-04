@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from api.creditCardList import get_credit_card_list
 from pydantic import BaseModel
@@ -7,6 +7,16 @@ import requests
 import json
 import os
 import pandas as pd
+from sqlalchemy.orm import Session
+from app.database import engine, Base, get_db
+from app.auth import get_password_hash, verify_password, create_access_token
+from fastapi.security import OAuth2PasswordRequestForm
+from app.dbmodels import User, FlightSearch
+from app.schemas import UserCreate, UserOut, LoginRequest, UserBase
+from passlib.context import CryptContext
+
+
+Base.metadata.create_all(bind=engine)
 
 # JSON File Paths
 JSON_FILE_PATH = "data/countries.json"
@@ -14,11 +24,15 @@ JSON_FILE_PATH_AIRPORTS = "data/airports.json"
 
 app = FastAPI()
 
+origins = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173"
+]
 # Enable CORS for your frontend
 app.add_middleware(
     CORSMiddleware,
     # Adjust based on your frontend URL
-    allow_origins=["http://localhost:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -139,3 +153,50 @@ def get_countries():
         return {"error": "Failed to fetch data"}
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# DATABASE
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Create a password context for hashing and verifying passwords
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+
+@app.post("/register", response_model=UserOut)
+def register_user(user: UserCreate, db: Session = Depends(get_db)):
+    if db.query(User).filter(User.email == user.email).first():
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    new_user = User(
+        first_name=user.first_name,
+        last_name=user.last_name,
+        email=user.email,
+        hashed_password=hash_password(user.password),
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return UserOut(
+        id=new_user.id,
+        first_name=new_user.first_name,
+        last_name=new_user.last_name,
+        email=new_user.email,
+        created_at=new_user.created_at.isoformat()
+    )
+
+
+@app.post("/login")
+def login_user(login_request: LoginRequest, db: Session = Depends(get_db)):
+    # Query the database for the user by email
+    user = db.query(User).filter(User.email == login_request.email).first()
+    if not user or not verify_password(login_request.password, user.hashed_password):
+        raise HTTPException(
+            status_code=400, detail="Incorrect email or password"
+        )
+
+    # Create JWT token
+    access_token = create_access_token(data={"sub": user.email})
+    return {"access_token": access_token, "token_type": "bearer"}

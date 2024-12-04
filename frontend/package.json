@@ -12,12 +12,20 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@fortawesome/fontawesome-svg-core": "^6.7.1",
+    "@fortawesome/free-solid-svg-icons": "^6.7.1",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/material": "^6.1.7",
     "@types/lodash": "^4.17.13",
+    "antd": "^5.22.3",
     "bootstrap": "^5.3.3",
+    "fast-levenshtein": "^3.0.0",
+    "fuse.js": "^7.0.0",
+    "ionicons": "^7.4.0",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-ionicons": "^1.5.7",
     "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
