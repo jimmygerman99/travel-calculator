@@ -89,7 +89,7 @@ export const LoginPage = () => {
                 <button type="submit" className="submit-btn">
                     Login
                 </button>
-                <Link to="/register" className="register-link" onClick={closeLoginDropdown}>
+                <Link to="/register" className="register-link">
                     Don't have an account? Register here.
                 </Link>
             </form>
