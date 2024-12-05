@@ -18,7 +18,7 @@ import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 import ProfilePage from "./pages/ProfilePage";
 import { FormDataProvider } from "./utils/FormDataContext";
 import ProtectedRouteLoggedIn from "./hooks/ProtectedRouteLoggedIn";
-
+import FlightResults from "./pages/FlightResults";
 //import refresh from "./utils/refresh";
 
 const Main = () => {
@@ -31,43 +31,44 @@ const Main = () => {
     });
 
     return (
-        <StrictMode>
-            <FormDataProvider>
-                <AuthProvider store={store}>
-                    <BrowserRouter>
-                        {/* Navbar */}
-                        <Navbar />
+        //<StrictMode>
+        <FormDataProvider>
+            <AuthProvider store={store}>
+                <BrowserRouter>
+                    {/* Navbar */}
+                    <Navbar />
 
-                        {/* Routes */}
-                        <Routes>
-                            <Route path="/" element={<App />} />
-                            <Route element={<Layout />}>
-                                <Route path="/about" element={<About />} />
-                                <Route path="/contact" element={<Contact />} />
-                                <Route path="/faq" element={<FAQ />} />
-                                <Route path="/FlightSearch" element={<FlightSearch />} />
+                    {/* Routes */}
+                    <Routes>
+                        <Route path="/" element={<App />} />
+                        <Route element={<Layout />}>
+                            <Route path="/about" element={<About />} />
+                            <Route path="/contact" element={<Contact />} />
+                            <Route path="/faq" element={<FAQ />} />
+                            <Route path="/FlightSearch" element={<FlightSearch />} />
 
-                                {/* Protected Routes for logged-out users */}
-                                <Route element={<ProtectedRouteLoggedIn fallbackPath="/" />}>
-                                    <Route path="/loginPage" element={<LoginPage />} />
-                                    <Route path="/register" element={<Register />} />
-                                </Route>
-
-                                {/* Protected Routes for logged-in users */}
-                                <Route element={<AuthOutlet fallbackPath="/loginPage" />}>
-                                    <Route path="ProfilePage" element={<ProfilePage />} />
-                                </Route>
-
-                                <Route path="*" element={<ErrorPage />} />
+                            {/* Protected Routes for logged-out users */}
+                            <Route element={<ProtectedRouteLoggedIn fallbackPath="/" />}>
+                                <Route path="/loginPage" element={<LoginPage />} />
+                                <Route path="/register" element={<Register />} />
                             </Route>
-                        </Routes>
 
-                        {/* Footer */}
-                        <div className="footer">This is a footer</div>
-                    </BrowserRouter>
-                </AuthProvider>
-            </FormDataProvider>
-        </StrictMode>
+                            {/* Protected Routes for logged-in users */}
+                            <Route element={<AuthOutlet fallbackPath="/loginPage" />}>
+                                <Route path="ProfilePage" element={<ProfilePage />} />
+                                <Route path="FlightResults" element={<FlightResults />} />
+                            </Route>
+
+                            <Route path="*" element={<ErrorPage />} />
+                        </Route>
+                    </Routes>
+
+                    {/* Footer */}
+                    <div className="footer">This is a footer</div>
+                </BrowserRouter>
+            </AuthProvider>
+        </FormDataProvider>
+        //</StrictMode>
     );
 };
 

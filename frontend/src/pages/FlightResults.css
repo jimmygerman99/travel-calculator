@@ -1,0 +1,127 @@
+/* Flight Results Page Wrapper */
+.flight-results {
+
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Flights Wrapper */
+.flights-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Flight Card Styling */
+.flight-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.flight-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Flight Header Styling */
+.flight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+}
+.flight-details-header {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between elements */
+    flex-grow: 1;
+}
+.dropdown-button {
+    background-color: #1976d2;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+}
+
+.dropdown-button:hover {
+    background-color: #155ca0;
+}
+
+/* Carbon Emissions Section */
+.carbon-emissions {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    padding: 10px 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Flight Legs Styling */
+.flight-legs {
+    margin-top: 10px;
+    padding: 10px 0;
+}
+
+.flight-leg {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 0;
+}
+
+.flight-leg-info {
+    display: flex;
+    align-items: center;
+}
+
+.airline-logo-small {
+    height: 30px;
+    margin-right: 10px;
+}
+
+/* Flight Extensions Styling */
+.flight-leg-extensions {
+    margin-top: 10px;
+    padding-left: 0;  /* Remove default padding */
+}
+
+.flight-leg-extensions ul {
+    list-style: none;  /* Remove bullet points */
+    padding-left: 0;   /* Remove additional padding */
+    margin: 0;
+}
+
+.flight-leg-extensions li {
+    margin-bottom: 5px; /* Space between items */
+    font-size: 14px;
+    color: #444;
+}
+
+/* Select Flight Button */
+.select-flight-button {
+    background-color: #1976d2;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+
+.select-flight-button:hover {
+    background-color: #155ca0;
+}

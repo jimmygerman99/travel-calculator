@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import { TreeSelect } from "antd";
 import type { TreeSelectProps } from "antd";
 import axios from "axios";
-import Fuse from "fuse.js"; // Import Fuse.js
+import Fuse from "fuse.js";
 
-export const TreeSelectComponent: React.FC = () => {
+interface TreeSelectComponentProps {
+    onSelectAirport: (value: string) => void; // Callback function to pass the selected airport IATA code
+}
+
+export const TreeSelectComponent: React.FC<TreeSelectComponentProps> = ({ onSelectAirport }) => {
     const [value, setValue] = useState<string | undefined>();
     const [treeData, setTreeData] = useState<TreeSelectProps["treeData"]>([]);
     const [fuse, setFuse] = useState<Fuse<any> | null>(null);
@@ -93,6 +97,7 @@ export const TreeSelectComponent: React.FC = () => {
 
     const onChange = (newValue: string) => {
         setValue(newValue);
+        onSelectAirport(newValue); // Call the callback to pass the selected airport IATA code
     };
 
     const onSearch = (searchText: string) => {

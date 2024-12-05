@@ -222,19 +222,17 @@ class FlightSearchRequest(BaseModel):
     include_airlines: Optional[str] = None  # Optional list of airlines
 
 
-@app.get("/search-flights")
+#@app.get("/search-flights")
 async def search_flights(
     departure_id: str,
     arrival_id: str,
     outbound_date: str,
-    return_date: Optional[str] = None,
+    return_date: Optional[str] = None,  # Optional for one-way trips
     currency: str = "USD",
-    trip_type: int = 2,
-    include_airlines: Optional[str] = None,
+    trip_type: int = 2,  # Use trip_type instead of typeID
+    include_airlines: Optional[str] = None
 ):
-    call_id = uuid.uuid4()
-    print(
-        f"[DEBUG] API call received at /search-flights (Call ID: {call_id}): {datetime.now()}")
+    print(f"[DEBUG] API call received at /search-flights: {datetime.now()}")
 
     # Prepare params for the Google Flights API call
     params = {
@@ -249,55 +247,70 @@ async def search_flights(
         "type": trip_type,
     }
 
+    # Only include `return_date` if it's provided
     if return_date:
         params["return_date"] = return_date
 
+    # Include airlines if specified
     if include_airlines:
         params["include_airlines"] = include_airlines
 
-    print(
-        f"[DEBUG] Parameters being sent to Google Flights API (Call ID: {call_id}): {params}")
+    print("[DEBUG] Parameters being sent to Google Flights API:", params)
 
     try:
+        # Making the actual API call to SerpAPI
         search = GoogleSearch(params)
         results = search.get_dict()
 
-        # Extract relevant data to simplify response for the front end
+        # Extract and simplify the relevant data
         flights_data = []
-        for flight in results.get("other_flights", []):
+        for flight_info in results.get("other_flights", []):
             flight_details = {
-                "total_duration": flight.get("total_duration"),
-                "price": flight.get("price"),
-                "type": flight.get("type"),
-                "carbon_emissions": flight.get("carbon_emissions", {}),
-                "airline_logo": flight.get("airline_logo"),
-                "flights": [
-                    {
-                        "airline": leg.get("airline"),
-                        "flight_number": leg.get("flight_number"),
-                        "departure_airport": leg.get("departure_airport", {}).get("name"),
-                        "arrival_airport": leg.get("arrival_airport", {}).get("name"),
-                        "departure_time": leg.get("departure_airport", {}).get("time"),
-                        "arrival_time": leg.get("arrival_airport", {}).get("time"),
-                        "duration": leg.get("duration"),
-                        "airplane": leg.get("airplane"),
-                        "travel_class": leg.get("travel_class"),
-                        "legroom": leg.get("legroom"),
-                        "extensions": leg.get("extensions", []),
-                        "airline_logo": leg.get("airline_logo"),
-                    }
-                    for leg in flight.get("flights", [])
-                ],
+                "total_duration": flight_info.get("total_duration"),
+                "price": flight_info.get("price"),
+                "type": flight_info.get("type"),
+                "carbon_emissions": flight_info.get("carbon_emissions", {}),
+                "airline_logo": flight_info.get("airline_logo"),
+                "flights": []
             }
+
+            for flight in flight_info.get("flights", []):
+                flight_data = {
+                    "airline": flight.get("airline"),
+                    "flight_number": flight.get("flight_number"),
+                    "departure_airport": flight.get("departure_airport", {}).get("name"),
+                    "arrival_airport": flight.get("arrival_airport", {}).get("name"),
+                    "departure_time": flight.get("departure_airport", {}).get("time"),
+                    "arrival_time": flight.get("arrival_airport", {}).get("time"),
+                    "duration": flight.get("duration"),
+                    "airplane": flight.get("airplane"),
+                    "travel_class": flight.get("travel_class"),
+                    "legroom": flight.get("legroom"),
+                    "extensions": flight.get("extensions"),
+                    "airline_logo": flight.get("airline_logo")
+                }
+                flight_details["flights"].append(flight_data)
+
             flights_data.append(flight_details)
 
-        response = {"success": True, "flights": flights_data}
+        # Organize the response data
+        response = {
+            "success": True,
+            "flights": flights_data
+        }
 
-        print(
-            f"[DEBUG] Returning organized flight data (Call ID: {call_id}): {response}")
+        # Save the response data to a JSON file for debugging purposes
+        json_filename = "flights_response_debug.json"
+        with open(json_filename, "w") as outfile:
+            json.dump(response, outfile, indent=4)
+
+        print(f"[DEBUG] Saved response data to {json_filename}")
+
+        # Print the final response data for debugging purposes
+        print("[DEBUG] Returning organized flight data:", response)
 
         return response
 
     except Exception as e:
-        print(f"[DEBUG] Unexpected error (Call ID: {call_id}): {e}")
+        print("Unexpected error:", e)  # Log unexpected errors
         raise HTTPException(status_code=500, detail=f"Unexpected error: {e}")

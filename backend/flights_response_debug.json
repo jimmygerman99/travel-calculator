@@ -1,0 +1,64 @@
+{
+    "success": true,
+    "flights": [
+        {
+            "total_duration": 151,
+            "price": 419,
+            "type": "One way",
+            "carbon_emissions": {
+                "this_flight": 157000,
+                "typical_for_this_route": 121000,
+                "difference_percent": 30
+            },
+            "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+            "flights": [
+                {
+                    "airline": "Delta",
+                    "flight_number": "DL 5788",
+                    "departure_airport": "Chicago O'Hare International Airport",
+                    "arrival_airport": "John F. Kennedy International Airport",
+                    "departure_time": "2024-12-05 18:10",
+                    "arrival_time": "2024-12-05 21:41",
+                    "duration": 151,
+                    "airplane": "Embraer 175",
+                    "travel_class": "Economy",
+                    "legroom": "31 in",
+                    "extensions": ["Average legroom (31 in)", "Wi-Fi for a fee", "Carbon emissions estimate: 157 kg"],
+                    "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png"
+                }
+            ]
+        },
+        {
+            "total_duration": 129,
+            "price": 589,
+            "type": "One way",
+            "carbon_emissions": {
+                "this_flight": 170000,
+                "typical_for_this_route": 121000,
+                "difference_percent": 40
+            },
+            "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+            "flights": [
+                {
+                    "airline": "Delta",
+                    "flight_number": "DL 4095",
+                    "departure_airport": "Chicago O'Hare International Airport",
+                    "arrival_airport": "John F. Kennedy International Airport",
+                    "departure_time": "2024-12-05 13:50",
+                    "arrival_time": "2024-12-05 16:59",
+                    "duration": 129,
+                    "airplane": "Embraer 175",
+                    "travel_class": "Economy",
+                    "legroom": "32 in",
+                    "extensions": [
+                        "Above average legroom (32 in)",
+                        "Wi-Fi for a fee",
+                        "In-seat power & USB outlets",
+                        "Carbon emissions estimate: 169 kg"
+                    ],
+                    "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png"
+                }
+            ]
+        }
+    ]
+}

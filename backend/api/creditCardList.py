@@ -13,7 +13,6 @@ def get_credit_card_list() -> List[Dict[str, List[str]]]:
                 "American Express Platinum",
                 "American Express Gold",
                 "American Express Green",
-                "Hilton Honors American Express",
                 "Delta SkyMiles American Express",
             ],
         },
