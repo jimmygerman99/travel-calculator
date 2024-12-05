@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import "./Register.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 import axios from "axios";
 
 export const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate(); // Hook for navigation
+    const signIn = useSignIn();
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -32,6 +35,7 @@ export const Register = () => {
     const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword((prev) => !prev);
     };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -49,21 +53,47 @@ export const Register = () => {
         setIsLoading(true); // Show loading state
 
         try {
+            // Register the user
             const response = await axios.post("http://127.0.0.1:8000/register", {
                 first_name: formData.firstName,
                 last_name: formData.lastName,
                 email: formData.email,
                 password: formData.password,
             });
+
             console.log("Registration successful:", response.data);
-            alert("Registration successful! You can now log in.");
+
+            // Automatically log in the user
+            const loginResponse = await axios.post("http://127.0.0.1:8000/login", {
+                email: formData.email,
+                password: formData.password,
+            });
+
+            if (loginResponse.status === 200) {
+                const success = signIn({
+                    auth: {
+                        token: loginResponse.data.access_token,
+                        type: "Bearer",
+                    },
+                    userState: { email: formData.email },
+                    refresh: loginResponse.data.refresh_token || null,
+                });
+
+                if (success) {
+                    alert("Registration and login successful!");
+                    navigate("/"); // Redirect to home after successful login
+                } else {
+                    alert("Login failed. Please try logging in manually.");
+                }
+            }
         } catch (error: any) {
-            console.error("Registration error:", error);
-            alert(
+            console.error("Error during registration or login:", error);
+
+            const errorMessage =
                 typeof error.response?.data === "object"
                     ? JSON.stringify(error.response?.data, null, 2)
-                    : error.response?.data || "An error occurred."
-            );
+                    : error.response?.data || "An error occurred.";
+            alert(errorMessage);
         } finally {
             setIsLoading(false); // Hide loading state
         }

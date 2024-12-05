@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
-import { FormData } from "./interfaces/FormDataTypes";
-import axios from "axios";
-import { validateCreditCardSelection } from "./utils/formErrorHandling";
 
+import { useFormData } from "./utils/FormDataContext";
 interface CreditCardSection {
     section: string;
     cards: string[];
@@ -13,18 +11,8 @@ interface CreditCardSection {
 const App: React.FC = () => {
     const navigate = useNavigate();
 
-    // Initialize form data from localStorage if available
-    const getInitialFormData = (): FormData => {
-        const savedFormData = localStorage.getItem("formData");
-        return savedFormData
-            ? JSON.parse(savedFormData)
-            : {
-                  creditCard: "",
-                  points: 0,
-              };
-    };
+    const { formData, updateFormData } = useFormData();
 
-    const [formData, setFormData] = useState<FormData>(getInitialFormData);
     const [creditCardSections, setCreditCardSections] = useState<CreditCardSection[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -56,7 +44,7 @@ const App: React.FC = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        updateFormData({ [name]: value }); // Update the global formData
 
         if (name === "creditCard") {
             const lowerCaseValue = value.toLowerCase();

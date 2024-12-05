@@ -18,7 +18,7 @@ import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 import ProfilePage from "./pages/ProfilePage";
 import { FormDataProvider } from "./utils/FormDataContext";
 import ProtectedRouteLoggedIn from "./hooks/ProtectedRouteLoggedIn";
-import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+
 //import refresh from "./utils/refresh";
 
 const Main = () => {

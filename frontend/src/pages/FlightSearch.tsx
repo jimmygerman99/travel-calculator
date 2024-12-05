@@ -3,59 +3,17 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./FlightSearch.css";
 import "../App.css";
-import { FormData } from "../interfaces/FormDataTypes";
 import { TreeSelectComponent } from "../components/TreeSelectComponent";
-import type { TreeSelectProps } from "antd";
-import { TreeSelect } from "antd";
+import { useFormData } from "../utils/FormDataContext";
+
 const continents = ["Africa", "Antarctica", "Asia", "Europe", "North America", "Oceania", "South America"];
 
-interface Airport {
-    airport_name: string;
-    iata: string | null;
-    city: string;
-    country: string;
-    continent: string;
-}
+const FlightSearch: React.FC = () => {
+    const { formData, updateFormData } = useFormData();
+    const [airports, setAirports] = useState([]); // List of airports
+    const [countries, setCountries] = useState<string[]>([]); // List of countries
 
-const FlightSearch = () => {
-    // State to manage form data
-    const [formData, setFormData] = useState<FormData>(() => {
-        const savedData = localStorage.getItem("flightSearchFormData");
-        return savedData
-            ? JSON.parse(savedData)
-            : {
-                  destination: "",
-                  destinationType: "city",
-                  departureCity: "",
-                  departureAirport: "",
-                  flightType: "economy",
-                  classType: "oneWay",
-                  departureDate: new Date(),
-                  returnDate: null,
-              };
-    });
-    const [value, setValue] = useState<string>();
-
-    const onChange = (newValue: string) => {
-        setValue(newValue);
-    };
-
-    const onPopupScroll: TreeSelectProps["onPopupScroll"] = (e) => {
-        console.log("onPopupScroll", e);
-    };
-    // Save data to localStorage whenever formData changes
-    useEffect(() => {
-        localStorage.setItem("flightSearchFormData", JSON.stringify(formData));
-    }, [formData]);
-
-    // State for all airports and filtered airports
-    const [airports, setAirports] = useState<Airport[]>([]);
-    const [filteredAirports, setFilteredAirports] = useState<Airport[]>([]);
-
-    // Fetching all countries
-    const [countries, setCountries] = useState<string[]>([]);
-
-    // Fetch countries from the backend when component mounts
+    // Fetch countries from the backend
     useEffect(() => {
         const fetchCountries = async () => {
             try {
@@ -73,18 +31,40 @@ const FlightSearch = () => {
         fetchCountries();
     }, []);
 
-    // Handler for input change
+    // Fetch airports for TreeSelectComponent
+    useEffect(() => {
+        const fetchAirports = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/airports");
+                if (response.ok) {
+                    const data = await response.json();
+                    setAirports(data);
+                } else {
+                    console.error("Failed to fetch airports");
+                }
+            } catch (error) {
+                console.error("Error fetching airports:", error);
+            }
+        };
+        fetchAirports();
+    }, []);
+
+    // Handler for input/select changes
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        updateFormData({ [name]: value });
     };
 
-    // Handler for date change
-    const handleDateChange = (name: keyof FormData, value: Date | null) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
+    // Handler for TreeSelectComponent
+    const handleTreeSelectChange = (value: string) => {
+        updateFormData({ departureCity: value });
     };
 
-    // Add days function for setting the minimum return date
+    // Handler for date changes
+    const handleDateChange = (name: keyof typeof formData, value: Date | null) => {
+        updateFormData({ [name]: value });
+    };
+
     const addDays = (date: Date | null, days: number): Date => {
         if (date) {
             const result = new Date(date);
@@ -94,7 +74,6 @@ const FlightSearch = () => {
         return new Date();
     };
 
-    // Handler for form submission
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log("Form submitted:", formData);
@@ -103,6 +82,7 @@ const FlightSearch = () => {
     return (
         <div className="searchFlightsPage2">
             <form onSubmit={handleSubmit}>
+                {/* Destination Type and Input */}
                 <div className="destinationGroup">
                     <label htmlFor="destinationType">Destination Type</label>
                     <select id="destinationType" name="destinationType" value={formData.destinationType} onChange={handleChange}>
@@ -136,26 +116,15 @@ const FlightSearch = () => {
                     )}
                 </div>
 
-                <label htmlFor="departureCity">Departure City / Airport Code</label>
-                <TreeSelectComponent />
-                {filteredAirports.length > 0 && (
-                    <select
-                        id="filteredAirports"
-                        name="filteredAirports"
-                        value={formData.departureAirport}
-                        onChange={(e) => setFormData({ ...formData, departureAirport: e.target.value })}
-                    >
-                        <option value="">Select an airport</option>
-                        {filteredAirports.map((airport, index) => (
-                            <option key={index} value={airport.iata || airport.city}>
-                                {airport.city
-                                    ? `${airport.city} (${airport.iata}) - ${airport.airport_name}`
-                                    : airport.airport_name}
-                            </option>
-                        ))}
-                    </select>
-                )}
+                {/* Departure City */}
+                <label htmlFor="departureCity">Departure City</label>
+                <TreeSelectComponent
+                    data={airports} // Pass airports as data
+                    value={formData.departureCity} // Bind global form data
+                    onChange={handleTreeSelectChange} // Update formData on selection
+                />
 
+                {/* Flight Type */}
                 <label htmlFor="flightType">Flight Type</label>
                 <select id="flightType" name="flightType" value={formData.flightType} onChange={handleChange}>
                     <option value="economy">Economy</option>
@@ -177,8 +146,6 @@ const FlightSearch = () => {
                             onChange={(date) => handleDateChange("departureDate", date)}
                             dateFormat="MMMM d, yyyy"
                             minDate={new Date()}
-                            showDisabledMonthNavigation
-                            customInput={<CustomDateInput label="Departure Date" date={formData.departureDate} />}
                         />
                     </div>
 
@@ -189,31 +156,14 @@ const FlightSearch = () => {
                                 onChange={(date) => handleDateChange("returnDate", date)}
                                 dateFormat="MMMM d, yyyy"
                                 minDate={formData.departureDate ? addDays(formData.departureDate, 1) : new Date()}
-                                showDisabledMonthNavigation
-                                customInput={<CustomDateInput label="Return Date" date={formData.returnDate} />}
                             />
                         </div>
                     )}
                 </div>
 
-                <button type="submit" onClick={() => console.log("Current Form Data:", formData)}>
-                    Search
-                </button>
+                {/* Submit Button */}
+                <button type="submit">Search</button>
             </form>
-        </div>
-    );
-};
-
-// Custom input component for the date picker
-const CustomDateInput: React.FC<{ value?: string; onClick?: () => void; label: string; date: Date | null }> = ({
-    value,
-    onClick,
-    label,
-    date,
-}) => {
-    return (
-        <div className="custom-date-input" onClick={onClick}>
-            <input type="text" readOnly value={date ? `${label}: ${value}` : `${label}`} className="date-input" />
         </div>
     );
 };

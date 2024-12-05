@@ -22,10 +22,10 @@ export const FormDataProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         classType: "",
     });
 
-    const updateFormData = (data: Partial<FormData>) => {
+    const updateFormData = (newData: Partial<FormData>) => {
         setFormData((prevData) => ({
-            ...prevData,
-            ...data, // Merge new data with existing form data
+            ...prevData, // Retain previous data
+            ...newData, // Merge with new data
         }));
     };
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Register.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 
@@ -11,9 +11,12 @@ export const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const signIn = useSignIn();
+    const navigate = useNavigate(); // Hook for navigation
+
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -28,40 +31,31 @@ export const LoginPage = () => {
     };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        setIsLoading(true); // Show loading state
-        setErrorMessage(null); // Clear previous error messages
-
         try {
-            const response = await axios.post("http://127.0.0.1:8000/login", {
+            const response = await axios.post("/login", {
                 email: formData.email,
                 password: formData.password,
             });
-
             if (response.status === 200) {
-                // Use signIn from react-auth-kit
                 const success = signIn({
                     auth: {
                         token: response.data.access_token,
                         type: "Bearer",
                     },
-                    userState: { email: formData.email }, // Optional user state
-                    refresh: response.data.refresh_token || null, // Only if you are using refreshToken
+                    userState: {
+                        firstName: response.data.firstName, // Include user's first name
+                        lastName: response.data.lastName,
+                    },
+                    refresh: response.data.refresh_token,
                 });
-
                 if (success) {
-                    alert("Login successful!");
-                    // Redirect or perform actions after login
+                    console.log("Login successful!");
                 } else {
-                    setErrorMessage("Login failed. Please try again.");
+                    console.error("Login failed.");
                 }
             }
-        } catch (error: any) {
-            console.error("Login error:", error);
-
-            // Set a user-friendly error message
-            const errorDetail = error.response?.data?.detail || "Invalid credentials. Please try again.";
-            setErrorMessage(errorDetail);
+        } catch (error) {
+            console.error("Error logging in:", error);
         } finally {
             setIsLoading(false); // Hide loading state
         }
@@ -102,8 +96,8 @@ export const LoginPage = () => {
                         {errorMessage}
                     </div>
                 )}
-                <button type="submit" className="submit-btn">
-                    Login
+                <button type="submit" className="submit-btn" disabled={isLoading}>
+                    {isLoading ? "Logging in..." : "Login"}
                 </button>
                 <Link to="/register" className="register-link">
                     Don't have an account? Register here.

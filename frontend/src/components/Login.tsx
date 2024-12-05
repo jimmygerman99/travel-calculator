@@ -49,12 +49,12 @@ export const Login: React.FC<LoginProps> = ({ closeLoginDropdown }) => {
                         token: response.data.access_token,
                         type: "Bearer",
                     },
-                    userState: { email: formData.email },
+                    userState: { firstName: response.data.first_name, email: formData.email }, // Assuming API returns first_name
                     refresh: response.data.refresh_token || null,
                 });
 
                 if (success) {
-                    alert("Login successful!");
+                    closeLoginDropdown(); // Close the dropdown on successful login
                 } else {
                     setErrorMessage("Login failed. Please try again.");
                 }
@@ -96,7 +96,9 @@ export const Login: React.FC<LoginProps> = ({ closeLoginDropdown }) => {
                     {errorMessage}
                 </div>
             )}
-            <button type="submit">Login</button>
+            <button type="submit" disabled={isLoading}>
+                {isLoading ? "Logging in..." : "Login"}
+            </button>
             <Link to="/register" className="register-link" onClick={closeLoginDropdown}>
                 Don't have an account? Register here.
             </Link>
