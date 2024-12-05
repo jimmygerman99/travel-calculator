@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
-
 import { useFormData } from "./utils/FormDataContext";
+
 interface CreditCardSection {
     section: string;
     cards: string[];
@@ -10,14 +10,11 @@ interface CreditCardSection {
 
 const App: React.FC = () => {
     const navigate = useNavigate();
-
     const { formData, updateFormData } = useFormData();
-
     const [creditCardSections, setCreditCardSections] = useState<CreditCardSection[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [filteredCards, setFilteredCards] = useState<string[]>([]);
-    const [formError, setFormError] = useState<string | null>(null);
+
     useEffect(() => {
         const fetchCards = async () => {
             try {
@@ -44,26 +41,13 @@ const App: React.FC = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        updateFormData({ [name]: value }); // Update the global formData
-
-        if (name === "creditCard") {
-            const lowerCaseValue = value.toLowerCase();
-            const matchedCards = creditCardSections.flatMap((section) =>
-                section.cards.filter((card) => card.toLowerCase().includes(lowerCaseValue))
-            );
-            setFilteredCards(matchedCards);
-        }
+        updateFormData({ [name]: value });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (formData.creditCard === "") {
-            alert("Please fill in all the data before pressing continue.");
-            return;
-        }
-
-        if (!formData.points || formData.points < 1000) {
-            alert("Please enter points greater than or equal to 1000.");
+        if (formData.creditCard === "" || !formData.points || formData.points < 1000) {
+            alert("Please fill in all fields correctly.");
             return;
         }
         console.log("Form data submitted:", formData);
@@ -73,38 +57,49 @@ const App: React.FC = () => {
     return (
         <div className="website">
             <div className="content">
-                <div className="info">Content Sesh</div>
-                <div className="BottomHalf">
-                    <div className="searchFlights">
-                        <form onSubmit={handleSubmit}>
-                            <div className="firstHalf">
-                                <label htmlFor="creditCard">Enter the credit card to use</label>
-                                {isLoading ? (
-                                    <p>Loading credit cards...</p>
-                                ) : error ? (
-                                    <p>{error}</p>
-                                ) : (
-                                    <select id="creditCard" name="creditCard" value={formData.creditCard} onChange={handleChange}>
-                                        <option value="">Select a Credit Card</option>
-                                        {creditCardSections.map((section, sectionIndex) => (
-                                            <optgroup key={sectionIndex} label={section.section}>
-                                                {section.cards.map((card, cardIndex) => (
-                                                    <option key={cardIndex} value={card}>
-                                                        {card}
-                                                    </option>
-                                                ))}
-                                            </optgroup>
-                                        ))}
-                                    </select>
-                                )}
-                            </div>
-                            <div className="secondHalf">
-                                <label htmlFor="points">Enter the maximum number of points</label>
-                                <input type="number" id="points" name="points" value={formData.points} onChange={handleChange} />
-                            </div>
-                            <button type="submit">Continue</button>
-                        </form>
-                    </div>
+                <div className="info">
+                    <h1>Welcome to Points Voyager</h1>
+                    <p className="description">Discover the best flight options and maximize your travel points.</p>
+                </div>
+                <div className="search-section">
+                    <form onSubmit={handleSubmit} className="search-form">
+                        <div className="form-group">
+                            <label htmlFor="creditCard">Credit Card</label>
+                            {isLoading ? (
+                                <p>Loading credit cards...</p>
+                            ) : error ? (
+                                <p className="error-text">{error}</p>
+                            ) : (
+                                <select id="creditCard" name="creditCard" value={formData.creditCard} onChange={handleChange}>
+                                    <option value="">Select a Credit Card</option>
+                                    {creditCardSections.map((section, sectionIndex) => (
+                                        <optgroup key={sectionIndex} label={section.section}>
+                                            {section.cards.map((card, cardIndex) => (
+                                                <option key={cardIndex} value={card}>
+                                                    {card}
+                                                </option>
+                                            ))}
+                                        </optgroup>
+                                    ))}
+                                </select>
+                            )}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="points">Maximum Number of Points</label>
+                            <input
+                                type="number"
+                                id="points"
+                                name="points"
+                                value={formData.points}
+                                onChange={handleChange}
+                                min={1000}
+                                placeholder="Enter points (minimum 1000)"
+                            />
+                        </div>
+                        <button type="submit" className="submit-button">
+                            Continue
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

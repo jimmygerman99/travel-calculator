@@ -106,35 +106,37 @@ const FlightResults: React.FC = () => {
                                         {flight.flights.map((leg, legIndex) => (
                                             <div key={legIndex} className="flight-leg">
                                                 <div className="flight-leg-info">
+                                                    {/* Airline logo */}
                                                     <img
                                                         src={leg.airline_logo}
                                                         alt={`${leg.airline} Logo`}
                                                         className="airline-logo-small"
                                                     />
-                                                    <div>
-                                                        <h4>
-                                                            {new Date(leg.departure_time).toLocaleTimeString([], {
-                                                                hour: "2-digit",
-                                                                minute: "2-digit",
-                                                            })}{" "}
-                                                            • {leg.departure_airport}
-                                                        </h4>
-                                                        <p>Travel time: {formatDuration(leg.duration)}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flight-leg-info">
-                                                    <div>
-                                                        <h4>
-                                                            {new Date(leg.arrival_time).toLocaleTimeString([], {
-                                                                hour: "2-digit",
-                                                                minute: "2-digit",
-                                                            })}{" "}
-                                                            • {leg.arrival_airport}
-                                                        </h4>
-                                                        <p>
-                                                            {leg.airline} • {leg.travel_class} • {leg.airplane} •{" "}
-                                                            {leg.flight_number}
-                                                        </p>
+                                                    {/* Departure and Arrival Information */}
+                                                    <div className="flight-leg-details">
+                                                        <div className="departure-info">
+                                                            <h4>
+                                                                {new Date(leg.departure_time).toLocaleTimeString([], {
+                                                                    hour: "2-digit",
+                                                                    minute: "2-digit",
+                                                                })}{" "}
+                                                                • {leg.departure_airport}
+                                                            </h4>
+                                                            <p>Travel time: {formatDuration(leg.duration)}</p>
+                                                        </div>
+                                                        <div className="arrival-info">
+                                                            <h4>
+                                                                {new Date(leg.arrival_time).toLocaleTimeString([], {
+                                                                    hour: "2-digit",
+                                                                    minute: "2-digit",
+                                                                })}{" "}
+                                                                • {leg.arrival_airport}
+                                                            </h4>
+                                                            <p>
+                                                                {leg.airline} • {leg.travel_class} • {leg.airplane} •{" "}
+                                                                {leg.flight_number}
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="flight-leg-extensions">
